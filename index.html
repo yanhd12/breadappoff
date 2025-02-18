@@ -10,33 +10,88 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: black;
-            color: white;
+            background: #fffff4; /* Светлый фон */
+            color: #583b27; /* Темно-коричневый текст */
             text-align: center;
             flex-direction: column;
             font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
         }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #583b27; /* Темно-коричневый текст */
+            text-shadow: 0 0 10px rgba(88, 59, 39, 0.2); /* Легкая тень */
+        }
+
         .button {
             display: flex;
             align-items: center;
-            background-color: #0088cc;
-            color: white;
+            background-color: rgba(88, 59, 39, 0.1); /* Полупрозрачный темно-коричневый */
+            color: #583b27; /* Темно-коричневый текст */
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
             font-size: 18px;
             margin-top: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(88, 59, 39, 0.2); /* Граница */
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
+
+        .button:hover {
+            background-color: rgba(88, 59, 39, 0.2); /* Темнее при наведении */
+            transform: scale(1.05);
+        }
+
         .button img {
             width: 24px;
             height: 24px;
             margin-right: 10px;
         }
+
         .button.buy-swap {
-            background-color: #1e90ff; /* Цвет для кнопки Buy or Swap */
+            background-color: rgba(30, 144, 255, 0.1); /* Голубой с прозрачностью */
+            border: 1px solid rgba(30, 144, 255, 0.2); /* Граница */
         }
+
         .button.dex-grafik {
-            background-color: #8a2be2; /* Фиолетовый цвет для кнопки Dex Grafik */
+            background-color: rgba(138, 43, 226, 0.1); /* Фиолетовый с прозрачностью */
+            border: 1px solid rgba(138, 43, 226, 0.2); /* Граница */
+        }
+
+        /* Анимация частиц */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(88, 59, 39, 0.3); /* Темно-коричневые частицы */
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-20px) translateX(20px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
         }
     </style>
 </head>
@@ -53,5 +108,14 @@
     <a href="https://www.geckoterminal.com/de/ton/pools/EQAZX2p5m8hg8lBO1j25tJfIODaMSueChYuIc1PJsDxZOKvn" class="button dex-grafik">
         Dex Grafik
     </a>
+
+    <!-- Анимация частиц -->
+    <div class="particles">
+        <div class="particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 50%; left: 70%; animation-delay: 2s;"></div>
+        <div class="particle" style="top: 30%; left: 40%; animation-delay: 4s;"></div>
+        <div class="particle" style="top: 80%; left: 50%; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 60%; left: 10%; animation-delay: 3s;"></div>
+    </div>
 </body>
 </html>
