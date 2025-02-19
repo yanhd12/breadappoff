@@ -4,45 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coming Soon</title>
+    <link rel="icon" href="your-favicon-url.ico" type="image/x-icon">
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #fffff4; /* Светлый фон */
-            color: #583b27; /* Темно-коричневый текст */
+            background: #fffff4;
+            color: #583b27;
             text-align: center;
             flex-direction: column;
             font-family: Arial, sans-serif;
             margin: 0;
             overflow: hidden;
+            position: relative;
         }
 
         h1 {
             font-size: 3rem;
             margin-bottom: 20px;
-            color: #583b27; /* Темно-коричневый текст */
-            text-shadow: 0 0 10px rgba(88, 59, 39, 0.2); /* Легкая тень */
+            color: #583b27;
+            text-shadow: 0 0 15px rgba(88, 59, 39, 0.5);
+            animation: glow 1.5s infinite alternate, wave 3s infinite ease-in-out;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(88, 59, 39, 0.5); }
+            to { text-shadow: 0 0 20px rgba(88, 59, 39, 0.8); }
+        }
+
+        @keyframes wave {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
         }
 
         .button {
             display: flex;
             align-items: center;
-            background-color: rgba(88, 59, 39, 0.1); /* Полупрозрачный темно-коричневый */
-            color: #583b27; /* Темно-коричневый текст */
+            background-color: rgba(88, 59, 39, 0.1);
+            color: #583b27;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
             font-size: 18px;
             margin-top: 20px;
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(88, 59, 39, 0.2); /* Граница */
+            border: 1px solid rgba(88, 59, 39, 0.2);
             transition: background-color 0.3s ease, transform 0.3s ease;
+            max-width: 90%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .button:hover {
-            background-color: rgba(88, 59, 39, 0.2); /* Темнее при наведении */
+            background-color: rgba(88, 59, 39, 0.2);
             transform: scale(1.05);
         }
 
@@ -53,44 +69,40 @@
         }
 
         .button.buy-swap {
-            background-color: rgba(30, 144, 255, 0.1); /* Голубой с прозрачностью */
-            border: 1px solid rgba(30, 144, 255, 0.2); /* Граница */
+            background-color: rgba(30, 144, 255, 0.1);
+            border: 1px solid rgba(30, 144, 255, 0.2);
         }
 
         .button.dex-grafik {
-            background-color: rgba(138, 43, 226, 0.1); /* Фиолетовый с прозрачностью */
-            border: 1px solid rgba(138, 43, 226, 0.2); /* Граница */
+            background-color: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.2);
         }
 
-        /* Анимация частиц */
-        .particles {
+        /* Анимация падающих хлебов */
+        .bread-background {
             position: absolute;
-            width: 100%;
-            height: 100%;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             z-index: -1;
         }
 
-        .particle {
+        .bread-fall {
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(88, 59, 39, 0.3); /* Темно-коричневые частицы */
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: float 5s infinite ease-in-out;
+            font-size: 24px; /* Уменьшен размер для большего количества */
+            color: rgba(88, 59, 39, 0.15);
+            opacity: 0.7;
+            animation: fall 10s linear infinite;
         }
 
-        @keyframes float {
+        @keyframes fall {
             0% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-20px) translateX(20px);
+                transform: translateY(-100%);
             }
             100% {
-                transform: translateY(0) translateX(0);
+                transform: translateY(100vh);
             }
         }
     </style>
@@ -109,13 +121,22 @@
         Dex Grafik
     </a>
 
-    <!-- Анимация частиц -->
-    <div class="particles">
-        <div class="particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
-        <div class="particle" style="top: 50%; left: 70%; animation-delay: 2s;"></div>
-        <div class="particle" style="top: 30%; left: 40%; animation-delay: 4s;"></div>
-        <div class="particle" style="top: 80%; left: 50%; animation-delay: 1s;"></div>
-        <div class="particle" style="top: 60%; left: 10%; animation-delay: 3s;"></div>
+    <!-- Анимация падающих хлебов -->
+    <div class="bread-background">
+        <!-- Генерация множества иконок хлеба -->
+        <script>
+            const breadContainer = document.querySelector('.bread-background');
+            const breadCount = 50; // Количество иконок хлеба
+
+            for (let i = 0; i < breadCount; i++) {
+                const bread = document.createElement('div');
+                bread.classList.add('bread-fall');
+                bread.textContent = '🍞';
+                bread.style.left = `${Math.random() * 100}%`; // Случайное положение по горизонтали
+                bread.style.animationDuration = `${Math.random() * 5 + 5}s`; // Случайная скорость
+                breadContainer.appendChild(bread);
+            }
+        </script>
     </div>
 </body>
 </html>
