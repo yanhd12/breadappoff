@@ -19,6 +19,7 @@
             margin: 0;
             overflow: hidden;
             position: relative;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         h1 {
@@ -122,6 +123,41 @@
             background: radial-gradient(circle, rgba(255,255,255,0) 60%, rgba(0,0,0,0.3) 100%);
             z-index: 11;
         }
+
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 12;
+        }
+
+        .settings-panel label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .settings-button {
+            padding: 5px 12px;  /* Smaller padding */
+            font-size: 14px;     /* Smaller font size */
+            background-color: rgba(88, 59, 39, 0.2);  /* Transparent background */
+            color: #b47f61;      /* Light brown text */
+            border: 1px solid rgba(88, 59, 39, 0.5);  /* Transparent border */
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .inverted {
+            filter: invert(100%);
+        }
     </style>
 </head>
 <body>
@@ -154,16 +190,56 @@
     <a href="https://www.geckoterminal.com/ton/pools" class="button dex-grafik">
         Dex Grafik
     </a>
-    <br>
-    <label>
-        <input type="checkbox" id="toggleVhs" checked> VHS Effect
-    </label>
+
+    <!-- Settings Button (smaller version, no emoji, light brown text) -->
+    <div class="settings-button">Settings</div>
+    
+    <!-- Settings Panel -->
+    <div class="settings-panel">
+        <label>
+            <input type="checkbox" id="toggleVhs" checked> VHS Effect
+        </label>
+        <label>
+            <input type="checkbox" id="toggleBreadRain" checked> Bread Rain
+        </label>
+        <label>
+            <input type="checkbox" id="toggleTextEffect" checked> Coming Soon Text Effect
+        </label>
+        <label>
+            <input type="checkbox" id="toggleDaltonism" /> Daltonism Mode
+        </label>
+    </div>
+
     <script>
-        const toggle = document.getElementById('toggleVhs');
+        const toggleVhs = document.getElementById('toggleVhs');
+        const toggleBreadRain = document.getElementById('toggleBreadRain');
+        const toggleTextEffect = document.getElementById('toggleTextEffect');
+        const toggleDaltonism = document.getElementById('toggleDaltonism');
         const vhsElements = document.querySelectorAll('.vhs-overlay, .scanlines, .crt-effect');
-        
-        toggle.addEventListener('change', () => {
-            vhsElements.forEach(el => el.style.display = toggle.checked ? 'block' : 'none');
+        const breadElements = document.querySelectorAll('.bread-fall');
+        const textEffectElement = document.querySelector('h1');
+        const body = document.body;
+        const settingsButton = document.querySelector('.settings-button');
+        const settingsPanel = document.querySelector('.settings-panel');
+
+        toggleVhs.addEventListener('change', () => {
+            vhsElements.forEach(el => el.style.display = toggleVhs.checked ? 'block' : 'none');
+        });
+
+        toggleBreadRain.addEventListener('change', () => {
+            breadElements.forEach(bread => bread.style.display = toggleBreadRain.checked ? 'block' : 'none');
+        });
+
+        toggleTextEffect.addEventListener('change', () => {
+            textEffectElement.style.animation = toggleTextEffect.checked ? 'glow 1.5s infinite alternate, wave 3s infinite ease-in-out' : 'none';
+        });
+
+        toggleDaltonism.addEventListener('change', () => {
+            body.classList.toggle('inverted', toggleDaltonism.checked);
+        });
+
+        settingsButton.addEventListener('click', () => {
+            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
         });
     </script>
 </body>
