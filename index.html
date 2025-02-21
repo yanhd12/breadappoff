@@ -143,11 +143,11 @@
         }
 
         .settings-button {
-            padding: 5px 12px;  /* Smaller padding */
-            font-size: 14px;     /* Smaller font size */
-            background-color: rgba(88, 59, 39, 0.2);  /* Transparent background */
-            color: #b47f61;      /* Light brown text */
-            border: 1px solid rgba(88, 59, 39, 0.5);  /* Transparent border */
+            padding: 5px 12px;
+            font-size: 14px;
+            background-color: rgba(88, 59, 39, 0.2);
+            color: #b47f61;
+            border: 1px solid rgba(88, 59, 39, 0.5);
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
@@ -157,6 +157,127 @@
 
         .inverted {
             filter: invert(100%);
+        }
+
+        .promo-code-input {
+            margin-top: 15px;
+            padding: 8px;
+            border: 1px solid rgba(88, 59, 39, 0.5);
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .promo-code-button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: rgba(88, 59, 39, 0.2);
+            color: #583b27;
+            border: 1px solid rgba(88, 59, 39, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .promo-code-button:hover {
+            background-color: rgba(88, 59, 39, 0.4);
+        }
+
+        .achievements-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 13;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .achievements-panel h2 {
+            margin-top: 0;
+            color: #583b27;
+        }
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .achievement img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .achievement.unlocked {
+            color: #583b27;
+        }
+
+        .achievements-button {
+            padding: 5px 12px;
+            font-size: 14px;
+            background-color: rgba(88, 59, 39, 0.2);
+            color: #b47f61;
+            border: 1px solid rgba(88, 59, 39, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: none; /* Скрыта по умолчанию */
+        }
+
+        .achievements-button:hover {
+            background-color: rgba(88, 59, 39, 0.4);
+        }
+
+        /* Стили для крестика закрытия */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #583b27;
+        }
+
+        .close-button:hover {
+            color: #b47f61;
+        }
+
+        /* Стили для фильтрации промокодов */
+        .promo-code-error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Стили для кнопки TON Connect */
+        #ton-connect-button {
+            margin-top: 20px;
+        }
+
+        .ton-connect-button {
+            padding: 10px 20px;
+            background-color: rgba(30, 144, 255, 0.2);
+            border: 1px solid rgba(30, 144, 255, 0.5);
+            border-radius: 5px;
+            font-size: 18px;
+            color: #583b27;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .ton-connect-button:hover {
+            background-color: rgba(30, 144, 255, 0.4);
         }
     </style>
 </head>
@@ -190,12 +311,17 @@
     <a href="https://www.geckoterminal.com/ton/pools" class="button dex-grafik">
         Dex Grafik
     </a>
+    <div id="ton-connect-button"></div>
 
-    <!-- Settings Button (smaller version, no emoji, light brown text) -->
-    <div class="settings-button">Settings</div>
-    
+    <!-- Settings Button -->
+    <div class="settings-button">More</div>
+
+    <!-- Achievements Button (скрыта по умолчанию) -->
+    <div class="achievements-button" id="achievementsButton" onclick="toggleAchievementsPanel()">Achievements</div>
+    <div id="ton-connect-button"></div>
     <!-- Settings Panel -->
     <div class="settings-panel">
+        <button class="close-button" onclick="closeSettingsPanel()">×</button>
         <label>
             <input type="checkbox" id="toggleVhs" checked> VHS Effect
         </label>
@@ -206,10 +332,70 @@
             <input type="checkbox" id="toggleTextEffect" checked> Coming Soon Text Effect
         </label>
         <label>
-            <input type="checkbox" id="toggleDaltonism" /> Daltonism Mode
+            <input type="checkbox" id="toggleDaltonism"> Daltonism Mode
         </label>
+
+        <!-- Promo Code Section -->
+        <div class="promo-code-section">
+            <input type="text" id="promoCode" class="promo-code-input" placeholder="Enter Promo Code">
+            <button class="promo-code-button" onclick="applyPromoCode()">Apply</button>
+            <div id="promoCodeError" class="promo-code-error">Invalid promo code.</div>
+        </div>
     </div>
 
+    <!-- Achievements Panel -->
+    <div class="achievements-panel">
+        <button class="close-button" onclick="closeAchievementsPanel()">×</button>
+        <h2>Achievements</h2>
+        <div id="achievementsList">
+            <!-- Achievements will be dynamically added here -->
+        </div>
+    </div>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <script>
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://yanhd12.github.io/beta-breadappoff/tonconnect-manifest.json',
+            buttonRootId: 'ton-connect-button'
+        });
+
+        // Функция для сохранения прогресса на блокчейне
+        async function saveProgress() {
+            const wallet = tonConnectUI.wallet;
+            if (wallet) {
+                const progress = {
+                    achievements: unlockedAchievements,
+                    promoCodes: document.getElementById('promoCode').value
+                };
+                // Здесь должен быть код для сохранения прогресса на блокчейне
+                // Например, вызов смарт-контракта для сохранения данных
+                console.log('Progress saved:', progress);
+            }
+        }
+
+        // Функция для загрузки прогресса с блокчейна
+        async function loadProgress() {
+            const wallet = tonConnectUI.wallet;
+            if (wallet) {
+                // Здесь должен быть код для загрузки прогресса с блокчейна
+                // Например, вызов смарт-контракта для получения данных
+                const progress = await loadProgressFromBlockchain();
+                if (progress) {
+                    unlockedAchievements = progress.achievements;
+                    document.getElementById('promoCode').value = progress.promoCodes;
+                    updateAchievementsList();
+                }
+            }
+        }
+
+        // Обработчик подключения кошелька
+        tonConnectUI.onStatusChange(wallet => {
+            if (wallet) {
+                loadProgress();
+            }
+        });
+
+        // Остальной код остается без изменений
+    </script>
     <script>
         const toggleVhs = document.getElementById('toggleVhs');
         const toggleBreadRain = document.getElementById('toggleBreadRain');
@@ -221,7 +407,105 @@
         const body = document.body;
         const settingsButton = document.querySelector('.settings-button');
         const settingsPanel = document.querySelector('.settings-panel');
+        const achievementsPanel = document.querySelector('.achievements-panel');
+        const achievementsList = document.getElementById('achievementsList');
+        const achievementsButton = document.getElementById('achievementsButton');
+        const promoCodeError = document.getElementById('promoCodeError');
 
+        // Achievements data
+        const achievements = {
+            "nikita-pidor": {
+                title: "САМ ПИДОР",
+                description: "Вы ввели промокод nikita-pidor.",
+                unlocked: false,
+            },
+            "first-promo": {
+                title: "Первый промокод",
+                description: "Вы ввели свой первый промокод.",
+                unlocked: false,
+            },
+        };
+
+        // Track unlocked achievements
+        let unlockedAchievements = [];
+
+        // Function to apply promo code
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promoCode').value.trim();
+            if (promoCode) {
+                let isValid = false;
+
+                // Проверка на валидность промокода
+                if (promoCode === "nikita-pidor" && !achievements["nikita-pidor"].unlocked) {
+                    achievements["nikita-pidor"].unlocked = true;
+                    unlockedAchievements.push(achievements["nikita-pidor"]);
+                    alert(`Достижение получено: ${achievements["nikita-pidor"].title}`);
+                    isValid = true;
+                }
+
+                if (!achievements["first-promo"].unlocked) {
+                    achievements["first-promo"].unlocked = true;
+                    unlockedAchievements.push(achievements["first-promo"]);
+                    alert(`Достижение получено: ${achievements["first-promo"].title}`);
+                    isValid = true;
+                }
+
+                // Показ ошибки, если промокод невалиден
+                if (!isValid) {
+                    promoCodeError.style.display = 'block';
+                    return;
+                } else {
+                    promoCodeError.style.display = 'none';
+                }
+
+                // Show achievements button if at least one achievement is unlocked
+                if (unlockedAchievements.length > 0) {
+                    achievementsButton.style.display = 'block';
+                }
+
+                // Update achievements list
+                updateAchievementsList();
+                saveProgress();
+            } else {
+                alert('Please enter a promo code.');
+            }
+        }
+
+        // Function to update achievements list
+        function updateAchievementsList() {
+            achievementsList.innerHTML = '';
+            Object.values(achievements).forEach(achievement => {
+                if (achievement.unlocked) {
+                    const achievementDiv = document.createElement('div');
+                    achievementDiv.classList.add('achievement');
+                    achievementDiv.classList.add('unlocked');
+                    achievementDiv.innerHTML = 
+                        `<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Achievement">
+                        <div>
+                            <strong>${achievement.title}</strong>
+                            <p>${achievement.description}</p>
+                        </div>`;
+                    achievementsList.appendChild(achievementDiv);
+                }
+            });
+        }
+
+        // Function to toggle achievements panel
+        function toggleAchievementsPanel() {
+            achievementsPanel.style.display = achievementsPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Function to close settings panel
+        function closeSettingsPanel() {
+            settingsPanel.style.display = 'none';
+        }
+
+        // Function to close achievements panel
+        function closeAchievementsPanel() {
+            achievementsPanel.style.display = 'none';
+        }
+
+        // Event listeners for settings
         toggleVhs.addEventListener('change', () => {
             vhsElements.forEach(el => el.style.display = toggleVhs.checked ? 'block' : 'none');
         });
@@ -241,6 +525,9 @@
         settingsButton.addEventListener('click', () => {
             settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
         });
+
+        // Initial update of achievements list
+        updateAchievementsList();
     </script>
 </body>
 </html>
