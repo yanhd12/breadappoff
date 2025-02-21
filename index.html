@@ -313,6 +313,9 @@
     <!-- Кнопка "More" -->
     <div class="settings-button" onclick="toggleSettingsPanel()">More</div>
 
+    <!-- Кнопка "Achievements" -->
+    <div class="achievements-button" id="achievementsButton" onclick="toggleAchievementsPanel()">Achievements</div>
+
     <!-- Панель настроек -->
     <div class="settings-panel">
         <button class="close-button" onclick="closeSettingsPanel()">×</button>
@@ -337,12 +340,12 @@
         </div>
     </div>
 
-    <!-- Achievements Panel -->
+    <!-- Панель достижений -->
     <div class="achievements-panel">
         <button class="close-button" onclick="closeAchievementsPanel()">×</button>
         <h2>Achievements</h2>
         <div id="achievementsList">
-            <!-- Achievements will be dynamically added here -->
+            <!-- Достижения будут добавлены сюда динамически -->
         </div>
     </div>
 
@@ -353,20 +356,105 @@
             buttonRootId: 'ton-connect-button'
         });
 
+        // Данные о достижениях
+        const achievements = {
+            "nikita-pidor": {
+                title: "САМ ПИДОР",
+                description: "Вы ввели промокод nikita-pidor.",
+                unlocked: false,
+            },
+            "first-promo": {
+                title: "Первый промокод",
+                description: "Вы ввели свой первый промокод.",
+                unlocked: false,
+            },
+        };
+
+        // Отслеживаем разблокированные достижения
+        let unlockedAchievements = [];
+
+        // Функция для применения промокода
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promoCode').value.trim();
+            if (promoCode) {
+                let isValid = false;
+
+                // Проверка на валидность промокода
+                if (promoCode === "nikita-pidor" && !achievements["nikita-pidor"].unlocked) {
+                    achievements["nikita-pidor"].unlocked = true;
+                    unlockedAchievements.push(achievements["nikita-pidor"]);
+                    alert(`Достижение получено: ${achievements["nikita-pidor"].title}`);
+                    isValid = true;
+                }
+
+                if (!achievements["first-promo"].unlocked) {
+                    achievements["first-promo"].unlocked = true;
+                    unlockedAchievements.push(achievements["first-promo"]);
+                    alert(`Достижение получено: ${achievements["first-promo"].title}`);
+                    isValid = true;
+                }
+
+                // Показ ошибки, если промокод невалиден
+                if (!isValid) {
+                    promoCodeError.style.display = 'block';
+                    return;
+                } else {
+                    promoCodeError.style.display = 'none';
+                }
+
+                // Показ кнопки "Achievements", если есть разблокированные достижения
+                if (unlockedAchievements.length > 0) {
+                    document.getElementById('achievementsButton').style.display = 'block';
+                }
+
+                // Обновление списка достижений
+                updateAchievementsList();
+            } else {
+                alert('Please enter a promo code.');
+            }
+        }
+
+        // Функция для обновления списка достижений
+        function updateAchievementsList() {
+            const achievementsList = document.getElementById('achievementsList');
+            achievementsList.innerHTML = ''; // Очистка списка
+
+            unlockedAchievements.forEach(achievement => {
+                const achievementDiv = document.createElement('div');
+                achievementDiv.classList.add('achievement', 'unlocked');
+                achievementDiv.innerHTML = `
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Achievement">
+                    <div>
+                        <strong>${achievement.title}</strong>
+                        <p>${achievement.description}</p>
+                    </div>
+                `;
+                achievementsList.appendChild(achievementDiv);
+            });
+        }
+
         // Функция для отображения/скрытия панели настроек
         function toggleSettingsPanel() {
             const settingsPanel = document.querySelector('.settings-panel');
-            if (settingsPanel.style.display === 'block') {
-                settingsPanel.style.display = 'none';
-            } else {
-                settingsPanel.style.display = 'block';
-            }
+            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
         }
 
         // Функция для закрытия панели настроек
         function closeSettingsPanel() {
             const settingsPanel = document.querySelector('.settings-panel');
             settingsPanel.style.display = 'none';
+        }
+
+        // Функция для отображения/скрытия панели достижений
+        function toggleAchievementsPanel() {
+            const achievementsPanel = document.querySelector('.achievements-panel');
+            achievementsPanel.style.display = achievementsPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Функция для закрытия панели достижений
+        function closeAchievementsPanel() {
+            const achievementsPanel = document.querySelector('.achievements-panel');
+            achievementsPanel.style.display = 'none';
         }
 
         // Обработчики событий для чекбоксов
@@ -394,34 +482,6 @@
         toggleDaltonism.addEventListener('change', () => {
             body.classList.toggle('inverted', toggleDaltonism.checked);
         });
-
-        // Функция для применения промокода
-        function applyPromoCode() {
-            const promoCode = document.getElementById('promoCode').value.trim();
-            if (promoCode) {
-                let isValid = false;
-
-                if (promoCode === "nikita-pidor") {
-                    alert('Промокод применен: nikita-pidor');
-                    isValid = true;
-                }
-
-                if (!isValid) {
-                    promoCodeError.style.display = 'block';
-                } else {
-                    promoCodeError.style.display = 'none';
-                }
-            } else {
-                alert('Please enter a promo code.');
-            }
-        }
-
-        // Функция для закрытия панели достижений
-        function closeAchievementsPanel() {
-            const achievementsPanel = document.querySelector('.achievements-panel');
-            achievementsPanel.style.display = 'none';
-        }
     </script>
 </body>
 </html>
-
