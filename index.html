@@ -528,6 +528,54 @@
 
         // Initial update of achievements list
         updateAchievementsList();
+                            const achievementDiv = document.createElement('div');
+                    achievementDiv.classList.add('achievement', 'unlocked');
+                    achievementDiv.innerHTML = `
+                        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Achievement">
+                        <span>${achievement.title} - ${achievement.description}</span>
+                    `;
+                    achievementsList.appendChild(achievementDiv);
+                }
+            });
+        }
+
+        // Function to toggle settings panel
+        settingsButton.addEventListener('click', () => {
+            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
+        });
+
+        function closeSettingsPanel() {
+            settingsPanel.style.display = 'none';
+        }
+
+        function toggleAchievementsPanel() {
+            achievementsPanel.style.display = achievementsPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closeAchievementsPanel() {
+            achievementsPanel.style.display = 'none';
+        }
+
+        // Toggle VHS effect
+        toggleVhs.addEventListener('change', () => {
+            vhsElements.forEach(el => el.style.display = toggleVhs.checked ? 'block' : 'none');
+        });
+
+        // Toggle Bread Rain effect
+        toggleBreadRain.addEventListener('change', () => {
+            breadElements.forEach(el => el.style.display = toggleBreadRain.checked ? 'block' : 'none');
+        });
+
+        // Toggle Text Animation effect
+        toggleTextEffect.addEventListener('change', () => {
+            textEffectElement.style.animation = toggleTextEffect.checked ? 'glow 1.5s infinite alternate, wave 3s infinite ease-in-out' : 'none';
+        });
+
+        // Toggle Daltonism mode
+        toggleDaltonism.addEventListener('change', () => {
+            body.classList.toggle('inverted', toggleDaltonism.checked);
+        });
     </script>
 </body>
 </html>
+
