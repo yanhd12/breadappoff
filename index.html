@@ -237,7 +237,6 @@
             background-color: rgba(88, 59, 39, 0.4);
         }
 
-        /* Стили для крестика закрытия */
         .close-button {
             position: absolute;
             top: 10px;
@@ -253,14 +252,12 @@
             color: #b47f61;
         }
 
-        /* Стили для фильтрации промокодов */
         .promo-code-error {
             color: red;
             margin-top: 10px;
             display: none;
         }
 
-        /* Стили для кнопки TON Connect */
         #ton-connect-button {
             margin-top: 20px;
         }
@@ -313,13 +310,10 @@
     </a>
     <div id="ton-connect-button"></div>
 
-    <!-- Settings Button -->
-    <div class="settings-button">More</div>
+    <!-- Кнопка "More" -->
+    <div class="settings-button" onclick="toggleSettingsPanel()">More</div>
 
-    <!-- Achievements Button (скрыта по умолчанию) -->
-    <div class="achievements-button" id="achievementsButton" onclick="toggleAchievementsPanel()">Achievements</div>
-    <div id="ton-connect-button"></div>
-    <!-- Settings Panel -->
+    <!-- Панель настроек -->
     <div class="settings-panel">
         <button class="close-button" onclick="closeSettingsPanel()">×</button>
         <label>
@@ -351,6 +345,7 @@
             <!-- Achievements will be dynamically added here -->
         </div>
     </div>
+
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <script>
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
@@ -358,45 +353,23 @@
             buttonRootId: 'ton-connect-button'
         });
 
-        // Функция для сохранения прогресса на блокчейне
-        async function saveProgress() {
-            const wallet = tonConnectUI.wallet;
-            if (wallet) {
-                const progress = {
-                    achievements: unlockedAchievements,
-                    promoCodes: document.getElementById('promoCode').value
-                };
-                // Здесь должен быть код для сохранения прогресса на блокчейне
-                // Например, вызов смарт-контракта для сохранения данных
-                console.log('Progress saved:', progress);
+        // Функция для отображения/скрытия панели настроек
+        function toggleSettingsPanel() {
+            const settingsPanel = document.querySelector('.settings-panel');
+            if (settingsPanel.style.display === 'block') {
+                settingsPanel.style.display = 'none';
+            } else {
+                settingsPanel.style.display = 'block';
             }
         }
 
-        // Функция для загрузки прогресса с блокчейна
-        async function loadProgress() {
-            const wallet = tonConnectUI.wallet;
-            if (wallet) {
-                // Здесь должен быть код для загрузки прогресса с блокчейна
-                // Например, вызов смарт-контракта для получения данных
-                const progress = await loadProgressFromBlockchain();
-                if (progress) {
-                    unlockedAchievements = progress.achievements;
-                    document.getElementById('promoCode').value = progress.promoCodes;
-                    updateAchievementsList();
-                }
-            }
+        // Функция для закрытия панели настроек
+        function closeSettingsPanel() {
+            const settingsPanel = document.querySelector('.settings-panel');
+            settingsPanel.style.display = 'none';
         }
 
-        // Обработчик подключения кошелька
-        tonConnectUI.onStatusChange(wallet => {
-            if (wallet) {
-                loadProgress();
-            }
-        });
-
-        // Остальной код остается без изменений
-    </script>
-    <script>
+        // Обработчики событий для чекбоксов
         const toggleVhs = document.getElementById('toggleVhs');
         const toggleBreadRain = document.getElementById('toggleBreadRain');
         const toggleTextEffect = document.getElementById('toggleTextEffect');
@@ -405,191 +378,49 @@
         const breadElements = document.querySelectorAll('.bread-fall');
         const textEffectElement = document.querySelector('h1');
         const body = document.body;
-        const settingsButton = document.querySelector('.settings-button');
-        const settingsPanel = document.querySelector('.settings-panel');
-        const achievementsPanel = document.querySelector('.achievements-panel');
-        const achievementsList = document.getElementById('achievementsList');
-        const achievementsButton = document.getElementById('achievementsButton');
-        const promoCodeError = document.getElementById('promoCodeError');
 
-        // Achievements data
-        const achievements = {
-            "nikita-pidor": {
-                title: "САМ ПИДОР",
-                description: "Вы ввели промокод nikita-pidor.",
-                unlocked: false,
-            },
-            "first-promo": {
-                title: "Первый промокод",
-                description: "Вы ввели свой первый промокод.",
-                unlocked: false,
-            },
-        };
+        toggleVhs.addEventListener('change', () => {
+            vhsElements.forEach(el => el.style.display = toggleVhs.checked ? 'block' : 'none');
+        });
 
-        // Track unlocked achievements
-        let unlockedAchievements = [];
+        toggleBreadRain.addEventListener('change', () => {
+            breadElements.forEach(el => el.style.display = toggleBreadRain.checked ? 'block' : 'none');
+        });
 
-        // Function to apply promo code
+        toggleTextEffect.addEventListener('change', () => {
+            textEffectElement.style.animation = toggleTextEffect.checked ? 'glow 1.5s infinite alternate, wave 3s infinite ease-in-out' : 'none';
+        });
+
+        toggleDaltonism.addEventListener('change', () => {
+            body.classList.toggle('inverted', toggleDaltonism.checked);
+        });
+
+        // Функция для применения промокода
         function applyPromoCode() {
             const promoCode = document.getElementById('promoCode').value.trim();
             if (promoCode) {
                 let isValid = false;
 
-                // Проверка на валидность промокода
-                if (promoCode === "nikita-pidor" && !achievements["nikita-pidor"].unlocked) {
-                    achievements["nikita-pidor"].unlocked = true;
-                    unlockedAchievements.push(achievements["nikita-pidor"]);
-                    alert(`Достижение получено: ${achievements["nikita-pidor"].title}`);
+                if (promoCode === "nikita-pidor") {
+                    alert('Промокод применен: nikita-pidor');
                     isValid = true;
                 }
 
-                if (!achievements["first-promo"].unlocked) {
-                    achievements["first-promo"].unlocked = true;
-                    unlockedAchievements.push(achievements["first-promo"]);
-                    alert(`Достижение получено: ${achievements["first-promo"].title}`);
-                    isValid = true;
-                }
-
-                // Показ ошибки, если промокод невалиден
                 if (!isValid) {
                     promoCodeError.style.display = 'block';
-                    return;
                 } else {
                     promoCodeError.style.display = 'none';
                 }
-
-                // Show achievements button if at least one achievement is unlocked
-                if (unlockedAchievements.length > 0) {
-                    achievementsButton.style.display = 'block';
-                }
-
-                // Update achievements list
-                updateAchievementsList();
-                saveProgress();
             } else {
                 alert('Please enter a promo code.');
             }
         }
 
-        // Function to update achievements list
-        function updateAchievementsList() {
-            achievementsList.innerHTML = '';
-            Object.values(achievements).forEach(achievement => {
-                if (achievement.unlocked) {
-                    const achievementDiv = document.createElement('div');
-                    achievementDiv.classList.add('achievement');
-                    achievementDiv.classList.add('unlocked');
-                    achievementDiv.innerHTML = 
-                        `<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Achievement">
-                        <div>
-                            <strong>${achievement.title}</strong>
-                            <p>${achievement.description}</p>
-                        </div>`;
-                    achievementsList.appendChild(achievementDiv);
-                }
-            });
-        }
-
-        // Function to toggle achievements panel
-        function toggleAchievementsPanel() {
-            achievementsPanel.style.display = achievementsPanel.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // Function to close settings panel
-        function closeSettingsPanel() {
-            settingsPanel.style.display = 'none';
-        }
-
-        // Function to close achievements panel
+        // Функция для закрытия панели достижений
         function closeAchievementsPanel() {
+            const achievementsPanel = document.querySelector('.achievements-panel');
             achievementsPanel.style.display = 'none';
         }
-
-        // Event listeners for settings
-        toggleVhs.addEventListener('change', () => {
-            vhsElements.forEach(el => el.style.display = toggleVhs.checked ? 'block' : 'none');
-        });
-
-        toggleBreadRain.addEventListener('change', () => {
-            breadElements.forEach(bread => bread.style.display = toggleBreadRain.checked ? 'block' : 'none');
-        });
-
-        toggleTextEffect.addEventListener('change', () => {
-            textEffectElement.style.animation = toggleTextEffect.checked ? 'glow 1.5s infinite alternate, wave 3s infinite ease-in-out' : 'none';
-        });
-
-        toggleDaltonism.addEventListener('change', () => {
-            body.classList.toggle('inverted', toggleDaltonism.checked);
-        });
-
-        settingsButton.addEventListener('click', () => {
-            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Initial update of achievements list
-        updateAchievementsList();
-                            const achievementDiv = document.createElement('div');
-                    achievementDiv.classList.add('achievement', 'unlocked');
-                    achievementDiv.innerHTML = `
-                        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Achievement">
-                        <span>${achievement.title} - ${achievement.description}</span>
-                    `;
-                    achievementsList.appendChild(achievementDiv);
-                }
-            });
-        }
-
-        // Function to toggle settings panel
-        settingsButton.addEventListener('click', () => {
-            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
-        });
-
-        function closeSettingsPanel() {
-            settingsPanel.style.display = 'none';
-        }
-
-        function toggleAchievementsPanel() {
-            achievementsPanel.style.display = achievementsPanel.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function closeAchievementsPanel() {
-            achievementsPanel.style.display = 'none';
-        }
-
-        // Toggle VHS effect
-        toggleVhs.addEventListener('change', () => {
-            vhsElements.forEach(el => el.style.display = toggleVhs.checked ? 'block' : 'none');
-        });
-
-        // Toggle Bread Rain effect
-        toggleBreadRain.addEventListener('change', () => {
-            breadElements.forEach(el => el.style.display = toggleBreadRain.checked ? 'block' : 'none');
-        });
-
-        // Toggle Text Animation effect
-        toggleTextEffect.addEventListener('change', () => {
-            textEffectElement.style.animation = toggleTextEffect.checked ? 'glow 1.5s infinite alternate, wave 3s infinite ease-in-out' : 'none';
-        });
-
-        // Toggle Daltonism mode
-        toggleDaltonism.addEventListener('change', () => {
-            body.classList.toggle('inverted', toggleDaltonism.checked);
-        });
-
-        function saveProgress(address, progress) {
-    localStorage.setItem(`progress_${address}`, JSON.stringify(progress));
-    console.log("Прогресс сохранен!");
-}
-
-function loadProgress(address) {
-    const progress = JSON.parse(localStorage.getItem(`progress_${address}`));
-    if (progress) {
-        console.log("Прогресс загружен:", progress);
-    } else {
-        console.log("Нет сохраненного прогресса");
-    }
-}
-
     </script>
 </body>
 </html>
