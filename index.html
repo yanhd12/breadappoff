@@ -575,6 +575,21 @@
         toggleDaltonism.addEventListener('change', () => {
             body.classList.toggle('inverted', toggleDaltonism.checked);
         });
+
+        function saveProgress(address, progress) {
+    localStorage.setItem(`progress_${address}`, JSON.stringify(progress));
+    console.log("Прогресс сохранен!");
+}
+
+function loadProgress(address) {
+    const progress = JSON.parse(localStorage.getItem(`progress_${address}`));
+    if (progress) {
+        console.log("Прогресс загружен:", progress);
+    } else {
+        console.log("Нет сохраненного прогресса");
+    }
+}
+
     </script>
 </body>
 </html>
